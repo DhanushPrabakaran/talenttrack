@@ -8,12 +8,15 @@ import {
   registerOrGetUserAction,
 } from "@/actions/auth";
 import { signInSchema } from "./lib/zod";
-import { use } from "react";
 
+// Notice this is only an object, not a full Auth.js instance
 export default {
   providers: [
     Credentials({
+      // Define the credentials fields
       credentials: {
+        name: { label: "Full Name", type: "text" },
+        rollNumber: { label: "Roll Number", type: "text" },
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
@@ -21,26 +24,26 @@ export default {
         try {
           if (!credentials) return null;
 
-          const { email, password } = await signInSchema.parseAsync(
-            credentials
+          // Validate credentials using Zod schema
+          const { name, rollNumber, email, password } =
+            await signInSchema.parseAsync(credentials);
+
+          // Fetch or create user
+          const user = await registerOrGetUserAction(
+            name,
+            rollNumber,
+            email,
+            password
           );
 
-          const user = await registerOrGetUserAction(email, password);
-
-          return {
-            id: user.id,
-            email: user.email,
-            role:user.role
-            image: user.image
-              ? user.image
-              : "https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-male-user-profile-vector-illustration-isolated-background-man-profile-sign-business-concept_157943-38764.jpg",
-          };
+          return { id: user.role, email: user.email, image: user.image };
         } catch (error) {
           if (error instanceof ZodError) {
             console.error("Validation error:", error.format());
           } else {
             console.error("Authorization error:", error);
           }
+          // Return `null` to indicate that the credentials are invalid
           return null;
         }
       },

@@ -1,6 +1,8 @@
 import { object, string } from "zod";
 
 export const signInSchema = object({
+  name: string().min(2, "Name must be at least 2 characters"),
+  rollNumber: string().min(4, "Roll number must be at least 4 characters"),
   email: string({ required_error: "Email is required" })
     .min(1, "Email is required")
     .email("Invalid email"),

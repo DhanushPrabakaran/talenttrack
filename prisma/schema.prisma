@@ -10,10 +10,11 @@ generator client {
 model User {
   id                String  @id @default(uuid())
   name              String
+  rollNumber        String
   email             String  @unique
   password          String
   role              String  @default("student") // "student" or "admin"
-  image             String?
+  image             String  @default("https://i.pinimg.com/736x/d2/51/c1/d251c106a3a1edeb414b9cc9fe92b256.jpg")
   gitLink           String?
   linkedinLink      String?
   leetCodeLink      String?

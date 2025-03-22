@@ -11,9 +11,11 @@ export async function saltAndHashPassword(password: string): Promise<string> {
 
 // Server action to register a new user or return existing user
 export async function registerOrGetUserAction(
+  name: string,
+  rollNumber: string,
   email: string,
   password: string
-): Promise<{ id: string; email: string; image: string | null }> {
+): Promise<{ id: string; email: string; image: string; role: string }> {
   let user = await prisma.user.findUnique({ where: { email } });
 
   if (user) {
@@ -22,7 +24,13 @@ export async function registerOrGetUserAction(
   } else {
     const hashedPassword = await saltAndHashPassword(password);
     user = await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: {
+        rollNumber: rollNumber,
+        name: name,
+        email,
+        password: hashedPassword,
+        role: "Admin",
+      },
     });
   }
 
