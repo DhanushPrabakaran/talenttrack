@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URLL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -8,71 +8,119 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
+  id                String  @id @default(uuid())
+  name              String
+  email             String  @unique
+  password          String
+  role              String  @default("student") // "student" or "admin"
+  image             String?
+  gitLink           String?
+  linkedinLink      String?
+  leetCodeLink      String?
+  codeStudioLink    String?
+  geeksForGeeksLink String?
+  interviewBitLink  String?
+  codeChefLink      String?
+  codeForcesLink    String?
+  hackerRankLink    String?
+  website           String?
+
+  bio             String?
+  solvedQuestions Int? // Total coding questions solved
+  resume          String? // Resume file URL
+
+  // Academic Details
+  dateOfBirth DateTime?
+  department  String?
+  degree      String?
+  marks10th   Float?
+  marks12th   Float?
+  marksDegree Float?
+
+  // Achievements & Certifications
+  certifications Certification[]
+  experiences    Experience[]
+  achievements   Achievement[]
+
+  // Job & Event Relations
+  interestedJobs JobPollInterest[]
+  events         Event[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Account {
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+model Certification {
+  id             String   @id @default(uuid())
+  userId         String
+  title          String
+  description    String?
+  issuedBy       String
+  issueDate      DateTime
+  certificateUrl String?
+
+  user User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([provider, providerAccountId])
 }
 
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Experience {
+  id          String    @id @default(uuid())
+  userId      String
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+
+  user User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  date        DateTime
 
-  @@id([identifier, token])
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
-// Optional for WebAuthn support
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
+model JobPoll {
+  id                 String            @id @default(uuid())
+  title              String
+  description        String
+  company            String
+  deadline           DateTime
+  interestedStudents JobPollInterest[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model JobPollInterest {
+  id         String   @id @default(uuid())
+  userId     String
+  jobPollId  String
+  responseAt DateTime @default(now()) // Stores response time
 
-  @@id([userId, credentialID])
+  user    User    @relation(fields: [userId], references: [id])
+  jobPoll JobPoll @relation(fields: [jobPollId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobPollId]) // Prevent duplicate entries
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  date        DateTime
+  createdAt   DateTime @default(now())
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      String?
 }

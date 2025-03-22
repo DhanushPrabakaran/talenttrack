@@ -1,19 +1,20 @@
 import { signOut } from "@/auth";
-// import Header from "@/components/block/Header";
+// import Header from "@/components/ui/Header";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
   return (
     <div className="">
-      {/* <Header /> */}
       <div className="flex justify-center  flex-grow h-screen align-middle items-center ">
-        <div className=" bg-cover   w-full h-full max-md:hidden"></div>
+        <div className=" bg-cover  bg-[url('../public/illustrations/Team.png')] w-full h-full max-md:hidden"></div>
         <div className=" w-full h-full flex flex-col align-middle justify-center items-center">
-          <div className="text-center flex flex-col gap-4 py-6 px-6 border rounded-md">
-            <h1 className="  text-4xl">
-              portfolio<span className="text-orange-700">forge</span>
+          <div className="text-center flex flex-col gap-4 ">
+            <h1 className="text-3xl text-center font-bold">
+              Talent<span className="text-green-400">Track</span>
             </h1>
-            <h5 className=" text-xl">Are you sure You want to logout ?</h5>
+            <p className="text-sm text-center text-gray-500">
+              Sign out with your credentials
+            </p>
             <form
               action={async () => {
                 "use server";

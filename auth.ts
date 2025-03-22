@@ -1,9 +1,21 @@
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
+import NextAuth from // , { type DefaultSession }
+"next-auth";
+import authConfig from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/prisma";
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
+import { prisma } from "./prisma/db";
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [GitHub],
+  session: { strategy: "jwt" },
+  ...authConfig,
 });
+
+// declare module "next-auth" {
+//   /**
+//    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+//    */
+//   interface Session {
+//     user: {
+//       // address: string;
+//     } & DefaultSession["user"];
+//   }
+// }
