@@ -1,4 +1,4 @@
-import { object, string } from "zod";
+import { object, string, number, literal } from "zod";
 
 export const signInSchema = object({
   name: string().min(2, "Name must be at least 2 characters"),
@@ -10,4 +10,29 @@ export const signInSchema = object({
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
+});
+
+export const StudentFormSchema = object({
+  name: string().min(2, "Name must be at least 2 characters"),
+  email: string().email("Invalid email address"),
+  bio: string().optional(),
+  website: string().url().optional().or(literal("")),
+  image: string().url().optional().or(literal("")),
+  gitLink: string().url().optional().or(literal("")),
+  linkedinLink: string().url().optional().or(literal("")),
+  leetCodeLink: string().url().optional().or(literal("")),
+  codeStudioLink: string().url().optional().or(literal("")),
+  geeksForGeeksLink: string().url().optional().or(literal("")),
+  interviewBitLink: string().url().optional().or(literal("")),
+  codeChefLink: string().url().optional().or(literal("")),
+  codeForcesLink: string().url().optional().or(literal("")),
+  hackerRankLink: string().url().optional().or(literal("")),
+  solvedQuestions: number().optional(),
+  resume: string().url().optional().or(literal("")),
+  age: number().optional(),
+  department: string().optional(),
+  degree: string().optional(),
+  marks10th: number().optional(),
+  marks12th: number().optional(),
+  marksDegree: number().optional(),
 });
