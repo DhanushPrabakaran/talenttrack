@@ -10,10 +10,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)"],
-        mono: ["var(--font-roboto-mono)"],
-
-        urbanist: ["var(--font-urbanist)"],
+        roboto: ["var(--font-robotorondensed)"],
+        sans: ["var(--font-geist-sans)"],
+        antonsc: ["var(--font-antonsc)"],
+        mono: ["var(--font-geist-mono)"],
+        schabo: ["var(--font-geist-schabo)"],
+        walkway: ["var(--font-walkway)"],
+        w95fa: ["var(--font-geist-w95fa)"],
       },
       colors: {
         background: "hsl(var(--background))",
