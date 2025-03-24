@@ -1,5 +1,4 @@
 import type { NextAuthConfig, User } from "next-auth";
-import { ZodError } from "zod";
 
 import Credentials from "next-auth/providers/credentials";
 import { registerOrGetUserAction } from "@/actions/auth";
@@ -18,11 +17,9 @@ export default {
         try {
           if (!credentials) throw new Error("No credentials provided");
 
-          // ✅ Validate credentials with Zod schema
           const { name, rollNumber, email, password } =
             await signInSchema.parseAsync(credentials);
 
-          // ✅ Fetch or create user
           const user = await registerOrGetUserAction(
             name,
             rollNumber,
@@ -35,20 +32,8 @@ export default {
           }
 
           return null;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error: unknown) {
-          let errorMessage = "An unexpected error occurred";
-
-          // ✅ Handle specific Zod validation errors
-          if (error instanceof ZodError) {
-            errorMessage =
-              "Validation failed: " + JSON.stringify(error.format());
-          } else if (error instanceof Error) {
-            errorMessage = error.message;
-          }
-
-          console.error("Authorization error:", errorMessage);
-
-          // ✅ Throwing an error to trigger the NextAuth redirect with an error param
           return null;
         }
       },
