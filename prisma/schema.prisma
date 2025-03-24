@@ -10,7 +10,7 @@ generator client {
 model User {
   id                String  @id @default(uuid())
   name              String
-  rollNumber        String
+  rollNumber        String  @unique
   email             String  @unique
   password          String
   role              String  @default("student") // "student" or "admin"
@@ -65,17 +65,16 @@ model Certification {
 }
 
 model Experience {
-  id          String    @id @default(uuid())
+  id          String   @id @default(cuid()) @map("_id")
   userId      String
   company     String
   role        String
-  startDate   DateTime
-  endDate     DateTime?
-  description String?
-
-  user User @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
+  start       String
+  end         String
+  description String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Achievement {

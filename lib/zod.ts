@@ -36,3 +36,17 @@ export const StudentFormSchema = object({
   marks12th: number().optional(),
   marksDegree: number().optional(),
 });
+
+export const experienceSchema = object({
+  role: string().min(1, "Role is required"),
+  company: string().min(1, "Company is required"),
+  start: string().refine(
+    (val) => !isNaN(new Date(val).getTime()),
+    "Invalid date format"
+  ),
+  end: string().refine(
+    (val) => !isNaN(new Date(val).getTime()),
+    "Invalid date format"
+  ),
+  description: string().min(1, "Description is required"),
+});

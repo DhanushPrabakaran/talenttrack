@@ -18,7 +18,7 @@ export async function registerOrGetUserAction(
 ): Promise<{ id: string; email: string; image: string; role: string }> {
   let user = await prisma.user.findUnique({ where: { email } });
 
-  if (user) {
+  if (user && rollNumber == user.rollNumber) {
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
   } else {
