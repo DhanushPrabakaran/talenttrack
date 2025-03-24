@@ -20,7 +20,6 @@ export default async function middleware(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  console.log(session);
   if (!session && isProtected) {
     const loginUrl = new URL("/signin", origin);
     loginUrl.searchParams.set("callbackUrl", pathname); // Save original path for redirection
