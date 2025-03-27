@@ -15,7 +15,7 @@ const loginSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   rollNumber: z.string().min(4, "Roll number must be at least 4 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
